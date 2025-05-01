@@ -5,6 +5,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { AllOutOutlined, CheckroomOutlined, GraphicEqOutlined } from "@mui/icons-material";
+import Link from "next/link";
 
 export default function MobileNavBar() {
   return (
@@ -15,18 +16,18 @@ export default function MobileNavBar() {
 
         {/* Navigation buttons in center 4 columns (3–6) */}
         <div className="col-span-4 flex justify-around items-center">
-          <button className="flex flex-col items-center text-gray-600 hover:text-black">
+        <Link href="/grafit" className="flex flex-col items-center text-gray-600 hover:text-black">
             <AllOutOutlined fontSize="medium" />
             <span className="text-xs">Grafit</span>
-          </button>
-          <button className="flex flex-col items-center text-gray-600 hover:text-black">
+          </Link>
+          <Link href="/closet" className="flex flex-col items-center text-gray-600 hover:text-black">
             <CheckroomOutlined fontSize="medium" />
             <span className="text-xs">Closet</span>
-          </button>
-          <button className="flex flex-col items-center text-gray-600 hover:text-black">
+          </Link>
+          <Link href="/profile" className="flex flex-col items-center text-gray-600 hover:text-black">
             <AccountCircleOutlinedIcon fontSize="medium" />
             <span className="text-xs">Profile</span>
-          </button>
+          </Link>
         </div>
 
         {/* Empty right columns (7–8) */}

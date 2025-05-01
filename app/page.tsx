@@ -19,20 +19,8 @@ export  default async function Home() {
       .toArray();
   return (
 
-    <>
-    <Navbar title="Home"/>
-
-    <Layout>
-    
-        <button>
-          <HomeOutlinedIcon />
-        </button>
+    <>  
         <p>{JSON.stringify(fits)}</p>
-    
-    </Layout>
-
-    <MobileNavBar/>
-
     </>
   );
 }

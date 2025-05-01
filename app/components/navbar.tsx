@@ -11,11 +11,11 @@ type NavbarProps = {
 export default function Navbar({ title }: NavbarProps) {
   return (
      <nav className="sticky top-0 left-0 right-0 w-full bg-white border-b border-gray-200 shadow z-50">
-     <div className="grid grid-cols-8 gap-5 px-4 py-2">
-       {/* Empty columns 1–2 */}
+     <div className="grid grid-cols-8 gap-5 py-2">
+       
        <div className="col-span-2" />
        {/* Buttons in center 4 columns (3–6) */}
-       <div className="col-span-4 flex justify-around items-center">
+       <div className="col-span-4 flex justify-between items-center">
          <button className="flex flex-col items-center text-gray-600 hover:text-black">
            <CameraAltOutlinedIcon />
          </button>
