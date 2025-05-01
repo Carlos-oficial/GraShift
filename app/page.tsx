@@ -1,4 +1,5 @@
 import Image from "next/image";
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import clientPromise from "@/lib/mongodb";
 
 export  default async function Home() {
@@ -14,6 +15,12 @@ export  default async function Home() {
 
       .toArray();
   return (
+    <div>
+      <button>
+
+      <HomeOutlinedIcon />
+      </button>
       <p>{JSON.stringify(fits)}</p>
+    </div>
   );
 }
