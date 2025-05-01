@@ -1,9 +1,12 @@
+import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "../../lib/mongodb";
 
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-
+export async function GET(
+    req: NextRequest,
+    { params }: { params: { page: number } },
+) {
     try {
 
         const client = await clientPromise;
@@ -18,13 +21,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
             .toArray();
 
-        res.json("fits");
+        return NextResponse.json(fits)
+    } catch (error) {
+        return NextResponse.json(
+            {
+                message: (error as Error).message,
+            },
 
-    } catch (e) {
-
-        console.error(e);
-
+        );
     }
-
 }
-
