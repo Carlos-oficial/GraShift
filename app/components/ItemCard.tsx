@@ -24,7 +24,7 @@ export default function ItemCard({ id, title, imageUrl }: ItemCardProps) {
           sizes="(min-width: 768px) 160px, 100vw"
         />
       </div>
-      <h3 className="text-sm mt-2 text-center text-gray-700">{title}</h3>
+      <h3 className="text-sm mt-2 px-2 text-gray-600">{title}</h3>
     </Link>
   );
 }

@@ -1,37 +1,34 @@
-"use client";
-
-import React from "react";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import CameraAltOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import { AllOutOutlined, CheckroomOutlined, GraphicEqOutlined } from "@mui/icons-material";
-import Link from "next/link";
+import Link from 'next/link';
+import { AllOutOutlined, CheckroomOutlined } from '@mui/icons-material';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
 export default function MobileNavBar() {
   return (
-    <nav className="fixed bottom-0 left-0 w-full  z-50">
-      <div className="grid grid-cols-8 gap-5 px-4 py-2">
-        {/* Empty left columns (1–2) */}
-        <div className="col-span-2" />
+    <nav className="fixed bottom-0 left-0 w-full z-50 bg-gradient-to-t from-white to-transparent ">
+      {/* Grid layout adapts: 3 cols on mobile, 8 cols on md+ */}
+      <div className="grid grid-cols-3 md:grid-cols-8 gap-5 px-4 py-2">
+        
+        {/* Left gap on desktop (columns 1-2), hidden on mobile */}
+        <div className="hidden md:block md:col-span-2" />
 
-        {/* Navigation buttons in center 4 columns (3–6) */}
-        <div className="col-span-4 flex justify-around items-center">
-        <Link href="/" className="flex flex-col items-center text-gray-600 hover:text-black">
+        {/* Nav buttons (3 cols on mobile, 4 cols centered on desktop) */}
+        <div className="col-span-3 md:col-span-4 flex justify-around items-center">
+          <Link href="/" className="flex flex-col items-center text-black hover:text-gray-500">
             <AllOutOutlined fontSize="medium" />
             <span className="text-xs">Grafit</span>
           </Link>
-          <Link href="/closet" className="flex flex-col items-center text-gray-600 hover:text-black">
+          <Link href="/closet" className="flex flex-col items-center text-black hover:text-gray-500">
             <CheckroomOutlined fontSize="medium" />
             <span className="text-xs">Closet</span>
           </Link>
-          <Link href="/profile" className="flex flex-col items-center text-gray-600 hover:text-black">
+          <Link href="/profile" className="flex flex-col items-center text-black hover:text-gray-500">
             <AccountCircleOutlinedIcon fontSize="medium" />
             <span className="text-xs">Profile</span>
           </Link>
         </div>
 
-        {/* Empty right columns (7–8) */}
-        <div className="col-span-2" />
+        {/* Right gap on desktop (columns 7-8), hidden on mobile */}
+        <div className="hidden md:block md:col-span-2" />
       </div>
     </nav>
   );
