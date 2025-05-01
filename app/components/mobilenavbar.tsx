@@ -9,14 +9,14 @@ import Link from "next/link";
 
 export default function MobileNavBar() {
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50">
+    <nav className="fixed bottom-0 left-0 w-full  z-50">
       <div className="grid grid-cols-8 gap-5 px-4 py-2">
         {/* Empty left columns (1–2) */}
         <div className="col-span-2" />
 
         {/* Navigation buttons in center 4 columns (3–6) */}
         <div className="col-span-4 flex justify-around items-center">
-        <Link href="/grafit" className="flex flex-col items-center text-gray-600 hover:text-black">
+        <Link href="/" className="flex flex-col items-center text-gray-600 hover:text-black">
             <AllOutOutlined fontSize="medium" />
             <span className="text-xs">Grafit</span>
           </Link>
