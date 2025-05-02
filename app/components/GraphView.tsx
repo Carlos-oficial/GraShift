@@ -1,7 +1,6 @@
 "use client";
 
-import ClothingGraph from "./graph";
-
+import ClothingGraph, { ClothingNode } from "./graph";
 export const sampleGraphData = {
     nodes: [
       {
@@ -21,7 +20,7 @@ export const sampleGraphData = {
         type: 'outfit',
         name: 'Outfit 1'
       }
-    ],
+    ] as ClothingNode[],
     links: [
       { source: 'shirt_1', target: 'outfit_1' },
       { source: 'jeans_1', target: 'outfit_1' }
@@ -38,7 +37,7 @@ export  default function GraphView() {
     return (
   
       <div className="fixed overflow-visible">
-          < ClothingGraph data={sampleGraphData} onClothingClick={handleClothingClick} />
+          < ClothingGraph data={sampleGraphData } onClothingClick={handleClothingClick} />
       </div>
     );
   }

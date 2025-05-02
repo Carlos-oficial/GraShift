@@ -4,7 +4,7 @@ import React, { useRef, useState, MouseEvent } from 'react';
 import ForceGraph2D, { ForceGraphMethods } from 'react-force-graph-2d';
 
 // Define custom node types
-interface ClothingNode {
+export interface ClothingNode {
   id: string;
   type: 'clothing' | 'outfit';
   name: string;
@@ -15,17 +15,17 @@ interface ClothingNode {
   fy?: number;
 }
 
-interface ClothingLink {
+export interface ClothingLink {
   source: string | ClothingNode;
   target: string | ClothingNode;
 }
 
-interface GraphData {
+export interface GraphData {
   nodes: ClothingNode[];
   links: ClothingLink[];
 }
 
-interface ClothingGraphProps {
+export interface ClothingGraphProps {
   data: GraphData;
   onClothingClick?: (id: string) => void;
 }
