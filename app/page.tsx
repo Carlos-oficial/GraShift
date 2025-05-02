@@ -6,6 +6,11 @@ import { fetchFits, Fit } from './server_functions/fits';
 import Navbar from "@/app/components/navbar"
 import Layout from "./components/layout";
 import MobileNavBar from "./components/mobilenavbar";
+import ClothingGraph from "./components/graph";
+import GraphView from "./components/GraphView";
+
+
+
 
 export default function Home() {
   const [fits, setFits] = useState<Fit[]>([]);
@@ -53,6 +58,8 @@ export default function Home() {
               </a>
             ))}
           </ul>
+
+          <GraphView/>
         </div>
       }
 

@@ -1,3 +1,5 @@
+"use client";
+
 import ItemCard from "../components/ItemCard";
 import Layout from "../components/layout";
 
