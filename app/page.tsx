@@ -3,6 +3,9 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import clientPromise from "@/lib/mongodb";
 import { useEffect, useState } from 'react';
 import { fetchFits, Fit } from './server_functions/fits';
+import Navbar from "@/app/components/navbar"
+import Layout from "./components/layout";
+import MobileNavBar from "./components/mobilenavbar";
 
 export default function Home() {
   const [fits, setFits] = useState<Fit[]>([]);
