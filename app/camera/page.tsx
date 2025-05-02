@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import FitCheckAnnotator from "../components/ImageAnnotator";
+import SegmentationTool from "../components/segmentation";
 
 export default function Camera() {
   const [image, setImage] = useState<string | null>(null);
@@ -29,6 +30,8 @@ export default function Camera() {
       </>
       }
       <button>Upload</button>
+
+      <SegmentationTool/>
     </div>
   );
 }
