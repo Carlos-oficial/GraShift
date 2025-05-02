@@ -1,5 +1,5 @@
 import Link from "next/link";
-import FitcheckCard from "../components/FitcheckCard";
+import FitcheckCard from "../../components/FitcheckCard";
 
 const fitcheckData = [
   { imageUrl: "/uploads/pants.jpg", title: "Casual", time: "12:30", date: "2023-04-01" },
@@ -26,7 +26,9 @@ export default function Diary() {
       {sortedDates.map((date) => (
         <div key={date} className="text-center mb-8">
           <h2 className="text-2xl mb-4">
-            {new Date(date).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}
+            {new Date(date).toDateString() === new Date().toDateString()
+              ? "Today"
+              : new Date(date).toLocaleDateString("en-US", { day: "numeric", month: "long", year: "numeric" })}
           </h2>
           <div className="flex flex-col items-center">
             {groupedData[date].map((item, index) => (

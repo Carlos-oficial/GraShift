@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { Piece } from '@/app/server_functions/pieces';
+import { fetchFit } from '@/app/server_functions/fits';
 
 interface Fit {
     id: string;
     name: string;
     note: string;
-    pieces: string[]; // Add pieces field
+    pieces: Piece[]; // Add pieces field
     image: string; // Add image field
 }
 
@@ -21,22 +23,18 @@ export default function FitPage() {
     useEffect(() => {
         if (!id) return;
 
-        const fetchFit = async () => {
+        const _fetchFit = async () => {
             try {
-                const response = await fetch(`/api/fits/${id}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch fit');
-                }
-                const data: Fit = await response.json();
+                const data = await fetchFit(id as string);
                 setFit(data);
+                return data;
             } catch (err: any) {
                 setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
-
-        fetchFit();
+        _fetchFit()
     }, [id]);
 
     if (loading) return <p>Loading...</p>;
@@ -52,13 +50,13 @@ export default function FitPage() {
             {fit.pieces.length > 0 ? (
                 <ul>
                     {fit.pieces.map((pieceId) => (
-                        <li key={pieceId}>{pieceId}</li>
+                        <li key={pieceId._id}>{pieceId.name}</li>
                     ))}
                 </ul>
             ) : (
                 <p>No pieces available</p>
             )}
-            <button onClick={()=>{}}>Repeat this outfit</button>
+            <button onClick={() => { }}>Repeat this outfit</button>
         </div>
     );
 }

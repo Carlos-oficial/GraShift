@@ -1,8 +1,8 @@
 "use client";
 
-import ItemCard from "../components/ItemCard";
-import Layout from "../components/layout";
-import { fetchPieces, Piece } from "../server_functions/pieces";
+import ItemCard from "../../components/ItemCard";
+import Layout from "../../components/layout";
+import { fetchPieces, Piece } from "../../server_functions/pieces";
 import { useEffect, useState } from "react";
 
 

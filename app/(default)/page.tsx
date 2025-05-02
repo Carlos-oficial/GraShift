@@ -1,0 +1,74 @@
+'use client'
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import clientPromise from "@/lib/mongodb";
+import { useEffect, useState } from 'react';
+import { fetchFits, Fit } from '../server_functions/fits';
+import Navbar from "@/app/components/navbar"
+import Layout from "../components/layout";
+import MobileNavBar from "../components/mobilenavbar";
+// import ClothingGraph from "./components/graph";
+import GraphView from "../components/GraphView";
+
+
+
+
+export default function Home() {
+  const [fits, setFits] = useState<Fit[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const _fetchFits = async (): Promise<void> => {
+      try {
+        const data = await fetchFits()
+        setFits(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    _fetchFits();
+  }, []);
+
+  return (
+    <div
+      onTouchStart={(e) => {
+      const touchStartX = e.touches[0].clientX;
+      e.currentTarget.ontouchend = (endEvent) => {
+        const touchEndX = endEvent.changedTouches[0].clientX;
+        if (touchStartX - touchEndX > 50) {
+        // User swiped left
+        window.location.href = '/camera'; // Redirect to camera page
+        }
+      };
+      }}
+    >
+      {/* {fits.length == 0 && <div>
+      <p>
+        No fits yet ...
+      </p>
+      <a href='/fits/new'> Add your first outfit here!</a >
+      </div> ||
+      <div>
+        <h1>All Fits</h1>
+        <ul>
+        {fits.map((fit) => (
+          <a href={`/fit/${fit._id}`} key={fit._id}>
+          <li>
+            <h2>{fit.name}</h2>
+            <p>{fit.note}</p>
+          </li>
+          </a>
+        ))}
+        </ul>
+
+      </div>
+      } */}
+
+      <GraphView/>
+
+    </div>
+  );
+}

@@ -1,5 +1,5 @@
-import ProfileHeader from "../components/ProfileHeader";
-import ResponsiveAvatar from "../components/UserAvatar";
+import ProfileHeader from "../../components/ProfileHeader";
+import ResponsiveAvatar from "../../components/UserAvatar";
 
 
 export default function ProfilePage() {

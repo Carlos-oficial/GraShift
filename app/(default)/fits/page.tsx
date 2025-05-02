@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { fetchFits, Fit } from '../server_functions/fits';
+import { fetchFits, Fit } from '../../server_functions/fits';
 
 
 

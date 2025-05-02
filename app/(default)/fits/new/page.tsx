@@ -21,6 +21,7 @@ const NewFitCheck = () => {
     const [date, setDate] = useState<Date>(new Date());
     const [ocasion, setOcasion] = useState<string | null>(null);
     const [dots, setDots] = useState<{ x: number; y: number; piece_data: any }[]>([]);
+    const [editingDot, setEditingDot] = useState<{ index: number; dot: { x: number; y: number } } | null>(null);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isFetchingWeatherData, setIsFetchingWeatherData] = useState(false);
@@ -186,11 +187,50 @@ const NewFitCheck = () => {
                             </button>
                         )}
                         {image &&
-
-                            <FitCheckAnnotator imgSrc={URL.createObjectURL(image)} dots={dots} setDots={setDots} />
+                            <FitCheckAnnotator imgSrc={URL.createObjectURL(image)} dots={dots} setDots={setDots} editingDot={editingDot} setEditingDot={setEditingDot}/>
                             // <img src={URL.createObjectURL(image)} alt="Captured" style={{ marginTop: "10px", maxWidth: "100%" }} />
                         }
                     </div>
+                    <ul >
+                        {dots.map((dot, index) => (
+                            <li key={index}>
+                                <div className="mt-2">
+                                    <label htmlFor={`piece-name-${index}`}>Piece Name:</label>
+                                    <input
+                                        type="text"
+                                        id={`piece-name-${index}`}
+                                        value={dot.piece_data?.name || ""}
+                                        onChange={(e) => {
+                                            const updatedDots = [...dots];
+                                            updatedDots[index].piece_data = {
+                                                ...updatedDots[index].piece_data,
+                                                name: e.target.value,
+                                            };
+                                            setDots(updatedDots);
+                                        }}
+                                        className="ml-2 border rounded px-2 py-1"
+                                    />
+                                </div>
+                                <div className="mt-2">
+                                    <label htmlFor={`piece-type-${index}`}>Piece Type:</label>
+                                    <input
+                                        type="text"
+                                        id={`piece-type-${index}`}
+                                        value={dot.piece_data?.type || ""}
+                                        onChange={(e) => {
+                                            const updatedDots = [...dots];
+                                            updatedDots[index].piece_data = {
+                                                ...updatedDots[index].piece_data,
+                                                type: e.target.value,
+                                            };
+                                            setDots(updatedDots);
+                                        }}
+                                        className="ml-2 border rounded px-2 py-1"
+                                    />
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
 
                 </div>
                 <button type="submit" disabled={isSubmitting}>
