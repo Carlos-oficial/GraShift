@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import MultiStepForm from './MultistepForm';
 
 interface ImageAnnotatorProps {
     imgSrc: string;
@@ -42,6 +43,8 @@ export default function FitCheckAnnotator({
         setEditingDot({ index: dots.length, dot: { x, y } });
     };
 
+    
+
     return (
 
         <div
@@ -57,22 +60,19 @@ export default function FitCheckAnnotator({
             {dots.map((dot, i) => (
                 <div key={i}>
                     {
-                        editingDot?.index === i &&
-                        <div
-                            style={{
-                                left: `${50}%`,
-                                top: `calc(${dot.y * 100}% - 200px)`,
-                                transform: 'translate(-50%, -50%)',
-                            }}
-                            className='absolute w-screen min-h-40 bg-white px-10 animate-fade-in'
-                        >
-                            <div className='flex flex-col rounded-xl items-center bg-blue-600 justify-center w-full'>
-                                <h1 className='text-white text-2xl font-bold'>Piece Data</h1>
-                                <p className='text-white text-lg'>x: {dot.x.toFixed(2)}</p>
-                                <p className='text-white text-lg'>y: {dot.y.toFixed(2)}</p>
-                                AAA
+                        editingDot?.index === i && (
+                            <div
+                              className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
+                              onClick={() => setEditingDot(null)} // Click outside closes the form
+                            >
+                              <div
+                                className="relative rounded-xl max-w-4xl w-full p-8 z-60"
+                                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                              >
+                                <MultiStepForm onComplete={() => console.log('Form completed')} onClose={() => setEditingDot(null)} />
+                              </div>
                             </div>
-                        </div>
+                          )
                     }
                     <div
                         className={`absolute w-5 h-5 rounded-full cursor-pointer ${editingDot?.index === i
