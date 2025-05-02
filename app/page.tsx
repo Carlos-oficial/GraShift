@@ -62,7 +62,8 @@ export default function Home() {
         </div>
       }
 
-      <GraphView />
+      <GraphView/>
+
     </div>
   );
 }

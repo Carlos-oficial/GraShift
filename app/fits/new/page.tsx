@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { create } from "./add_fit_check";
 import BackgroundRemover from "@/app/components/background_remover";
 import mobileCheck from "@/lib/mobile_check";
+import FitCheckAnnotator from "@/app/components/ImageAnnotator";
+import CircularProgress from "@mui/material/CircularProgress";
+import { weatherIcons } from "@/lib/weather_icons";
+
+// Define the type for weatherIcons keys
+type WeatherIconKey = keyof typeof weatherIcons;
 
 const visualcrossing_apikey = process.env.VSIUALCROSSING_API_KEY ?? "H53XFDC27T25HNKSVS6JQJ6S2";
 
@@ -13,7 +19,8 @@ const NewFitCheck = () => {
     const [image, setImage] = useState<File | null>(null);
     const [note, setNote] = useState("");
     const [date, setDate] = useState<Date>(new Date());
-    const [ocasion, setOcasion] = useState<string|null>(null);
+    const [ocasion, setOcasion] = useState<string | null>(null);
+    const [dots, setDots] = useState<{ x: number; y: number; piece_data: any }[]>([]);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isFetchingWeatherData, setIsFetchingWeatherData] = useState(false);
@@ -98,7 +105,7 @@ const NewFitCheck = () => {
         try {
             setIsSubmitting(true);
 
-            await create({ "image": image, "note": note, "date": date,weather: weatherData, "ocasion": ocasion });
+            await create({ "image": image, "note": note, "date": date, weather: weatherData, "ocasion": ocasion });
         } catch (error) {
             console.error("Error uploading outfit:", error);
             alert("Failed to add outfit.");
@@ -111,7 +118,24 @@ const NewFitCheck = () => {
         <div className="container">
             <a href="../"> Repeating a fit? </a>
             <h1> Add a New Outfit </h1>
-            {isFetchingWeatherData && <p>Fetching weather data...</p> || weatherData && <p>{JSON.stringify(weatherData)}</p> || <p>"not fetched yet"</p>}
+            {isFetchingWeatherData ? (
+                <p>
+                    <span>Fetching weather data...</span>
+                    <span style={{ marginLeft: "10px" }}>
+                        <CircularProgress size={20} />
+                    </span>
+                </p>
+            ) : weatherData ? (
+                <div>
+                    <img src={weatherIcons[weatherData.icon as WeatherIconKey] || ""} alt="Weather Icon" style={{ width: "50px", height: "50px" }} />
+                    <p>Weather: {weatherData.condition}</p>
+                    <p>{weatherData.icon}</p>
+                    <p>Temperature: {weatherData.tempmax}°C / {weatherData.tempmin}°C</p>
+                    <p>Feels Like: {weatherData.feelslikemax}°C / {weatherData.feelslikemin}°C</p>
+                </div>
+            ) : (
+                <p>"Weather data not fetched yet"</p>
+            )}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="note">Note:</label>
@@ -161,20 +185,14 @@ const NewFitCheck = () => {
                                 Choose from Gallery
                             </button>
                         )}
-                        {image && <img src={URL.createObjectURL(image)} alt="Captured" style={{ marginTop: "10px", maxWidth: "100%" }} />}
+                        {image &&
+
+                            <FitCheckAnnotator imgSrc={URL.createObjectURL(image)} dots={dots} setDots={setDots} />
+                            // <img src={URL.createObjectURL(image)} alt="Captured" style={{ marginTop: "10px", maxWidth: "100%" }} />
+                        }
                     </div>
 
                 </div>
-                {image && (
-                    <div>
-                        <p>Preview:</p>
-                        <img
-                            src={URL.createObjectURL(image)}
-                            alt="Selected Outfit"
-                            style={{ maxWidth: "100%", height: "auto" }}
-                        />
-                    </div>
-                )}
                 <button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? "Submitting..." : "Add Outfit"}
                 </button>

@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import ClothingGraph, { ClothingNode } from "./graph";
 export const sampleGraphData = {
