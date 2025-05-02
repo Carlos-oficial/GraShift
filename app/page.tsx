@@ -6,7 +6,7 @@ import { fetchFits, Fit } from './server_functions/fits';
 import Navbar from "@/app/components/navbar"
 import Layout from "./components/layout";
 import MobileNavBar from "./components/mobilenavbar";
-import ClothingGraph from "./components/graph";
+// import ClothingGraph from "./components/graph";
 import GraphView from "./components/GraphView";
 
 
@@ -44,7 +44,7 @@ export default function Home() {
         <p>
           No fits yet ...
         </p>
-        <a href='/fits/new'> add yout first outfit here!</a >
+        <a href='/fits/new'> Add your first outfit here!</a >
       </div> ||
         <div>
           <h1>All Fits</h1>
@@ -59,10 +59,10 @@ export default function Home() {
             ))}
           </ul>
 
-          <GraphView/>
         </div>
       }
 
+      <GraphView />
     </div>
   );
 }
