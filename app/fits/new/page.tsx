@@ -11,9 +11,10 @@ const visualcrossing_apikey = process.env.VSIUALCROSSING_API_KEY ?? "H53XFDC27T2
 
 const NewFitCheck = () => {
     const [image, setImage] = useState<File | null>(null);
-    const [outfitName, setOutfitName] = useState("");
     const [note, setNote] = useState("");
     const [date, setDate] = useState<Date>(new Date());
+    const [ocasion, setOcasion] = useState<string|null>(null);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isFetchingWeatherData, setIsFetchingWeatherData] = useState(false);
 
@@ -86,19 +87,18 @@ const NewFitCheck = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!image || !outfitName) {
+        if (!image) {
             alert("Please provide an outfit name and an image.");
             return;
         }
 
         const formData = new FormData();
         formData.append("image", image);
-        formData.append("outfitName", outfitName);
 
         try {
             setIsSubmitting(true);
 
-            await create({ "image": image, "name": outfitName, "note": note, "date": date });
+            await create({ "image": image, "note": note, "date": date,weather: weatherData, "ocasion": ocasion });
         } catch (error) {
             console.error("Error uploading outfit:", error);
             alert("Failed to add outfit.");
@@ -110,23 +110,12 @@ const NewFitCheck = () => {
     return (
         <div className="container">
             <a href="../"> Repeating a fit? </a>
-            <h1>Add a New Outfit</h1>
+            <h1> Add a New Outfit </h1>
             {isFetchingWeatherData && <p>Fetching weather data...</p> || weatherData && <p>{JSON.stringify(weatherData)}</p> || <p>"not fetched yet"</p>}
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="outfitName">Outfit Name:</label>
-                    <input
-                        type="text"
-                        id="outfitName"
-                        value={outfitName}
-                        onChange={(e) => setOutfitName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
                     <label htmlFor="note">Note:</label>
-                    <input
-                        type="text"
+                    <textarea
                         id="note"
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
@@ -138,7 +127,7 @@ const NewFitCheck = () => {
                     <select
                         id="occasion"
                         required
-                        onChange={(e) => console.log(`Selected occasion: ${e.target.value}`)}
+                        onChange={(e) => setOcasion(e.target.value)}
                     >
                         <option value="">Select an occasion</option>
                         <option value="work">Work</option>

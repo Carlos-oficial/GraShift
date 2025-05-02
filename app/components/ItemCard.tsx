@@ -17,8 +17,8 @@ export default function ItemCard({ id, title, imageUrl }: ItemCardProps) {
     >
       <div className="aspect-square relative w-full overflow-hidden bg-gray-100">
         <Image
-          src={imageUrl}
-          alt={title}
+          src={imageUrl ? imageUrl : '/images/placeholder.png'}
+          alt={title ?? ""}
           fill
           className="object-cover"
           sizes="(min-width: 768px) 160px, 100vw"

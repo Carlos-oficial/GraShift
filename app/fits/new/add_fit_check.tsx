@@ -4,11 +4,22 @@ import clientPromise from '@/lib/mongodb'; // Adjust the path based on your proj
 const fs = require('fs');
 const path = require('path');
 
-interface FitCheckData {
-    name: string;
+interface weatherData {
+    tempmax: number;
+    tempmin: number;
+    feelslikemax: number;
+    feelslikemin: number;
+    condition: string;
     note: string;
+    icon: string;
+    [key: string]: any; // To allow additional properties if needed
+}
+
+interface FitCheckData {
+    note: string | null | undefined;
     image: File;
-    
+    ocasion: string | null | undefined;
+    weather: weatherData | null | undefined;
     [key: string]: any; // To allow additional properties if needed
 }
 
