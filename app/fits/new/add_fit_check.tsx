@@ -4,17 +4,23 @@ import clientPromise from '@/lib/mongodb'; // Adjust the path based on your proj
 const fs = require('fs');
 const path = require('path');
 
-export async function create(newOutfit: FormData) {
-    console.log("Creating outfit:", newOutfit);
-    const client = await clientPromise;
+interface FitCheckData {
+    name: string;
+    description: string;
+    image: File;
+    
+    [key: string]: any; // To allow additional properties if needed
+}
+
+export async function create(fitCheck: FitCheckData) {
+    console.log("Creating outfit:", fitCheck);
+    const client = await clientPromise.connect();
 
     const db = client.db("Alfaiate");
-    const collection = db.collection("Fits");
-    const outfitData = Object.fromEntries(newOutfit.entries());
-    const imageFile = newOutfit.get('image') as File;
+    const collection = db.collection("fit_checks");
+    const imageFile = fitCheck.image;
 
     if (imageFile) {
-
         const imageFolderPath = path.join(process.cwd(), 'public', 'uploads');
         if (!fs.existsSync(imageFolderPath)) {
             fs.mkdirSync(imageFolderPath, { recursive: true });
@@ -24,13 +30,13 @@ export async function create(newOutfit: FormData) {
         const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
         fs.writeFileSync(imagePath, imageBuffer);
 
-        outfitData.imagePath = `/uploads/${imageFile.name}`;
+        fitCheck.imagePath = `/uploads/${imageFile.name}`;
     }
-    const result = await collection.insertOne(newOutfit);
+    const result = await collection.insertOne(fitCheck);
 
     if (!result.acknowledged) {
         throw new Error('Failed to create outfit');
     }
 
-    return newOutfit;
+    return fitCheck;
 }

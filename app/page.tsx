@@ -1,6 +1,8 @@
-import Image from "next/image";
+'use client'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import clientPromise from "@/lib/mongodb";
+import { useEffect, useState } from 'react';
+import { fetchFits, Fit } from './server_functions/fits';
 import Navbar from "@/app/components/navbar"
 import Layout from "./components/layout";
 import MobileNavBar from "./components/mobilenavbar";
@@ -10,29 +12,57 @@ import GraphView from "./components/GraphView";
 
 
 
-export  default async function Home() {
-  const client = await clientPromise;
+export default function Home() {
+  const [fits, setFits] = useState<Fit[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const db = client.db("Alfaiate");
+  useEffect(() => {
+    const _fetchFits = async () => {
+      try {
+        const data = await fetchFits()
+        setFits(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleClothingClick = (id : String) => {
-    console.log('Show outfits with:', id);
-    // Maybe open a drawer or modal here
-  };
+    _fetchFits();
+  }, []);
 
-  const fits = await db
-
-      .collection("Fits")
-
-      .find({})
-
-      .toArray();
   return (
+    <div>
+      <button>
+        <div>
 
-    <>  
-        <p>{JSON.stringify(fits)}</p>
+          <HomeOutlinedIcon />
+        </div>
+      </button>
+      {fits.length == 0 && <div>
+        <p>
+          No fits yet ...
+        </p>
+        <a href='/fits/new'> add yout first outfit here!</a >
+      </div> ||
+        <div>
+          <h1>All Fits</h1>
+          <ul>
+            {fits.map((fit) => (
+              <a href={`/fit/${fit._id}`} key={fit._id}>
+                <li>
+                  <h2>{fit.name}</h2>
+                  <p>{fit.description}</p>
+                </li>
+              </a>
+            ))}
+          </ul>
 
-        <GraphView/>
-    </>
+          <GraphView/>
+        </div>
+      }
+
+    </div>
   );
 }
