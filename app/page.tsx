@@ -59,9 +59,10 @@ export default function Home() {
             ))}
           </ul>
 
-          <GraphView/>
         </div>
       }
+
+      <GraphView/>
 
     </div>
   );

@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import ClothingGraph from "./graph";
 
