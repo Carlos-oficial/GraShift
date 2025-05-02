@@ -13,9 +13,9 @@ export default function ItemCard({ id, title, imageUrl }: ItemCardProps) {
   return (
     <Link
       href={`/items/${id}`}
-      className="block col-span-1 hover:shadow-md transition-shadow"
+      className="block col-span-1 hover:opacity-80 transition-shadow"
     >
-      <div className="aspect-square relative w-full rounded-lg overflow-hidden bg-gray-100">
+      <div className="aspect-square relative w-full overflow-hidden bg-gray-100">
         <Image
           src={imageUrl}
           alt={title}

@@ -4,7 +4,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 
 export default function MobileNavBar() {
   return (
-    <nav className="fixed bottom-0 left-0 w-full z-50 bg-gradient-to-t from-white to-transparent ">
+    <nav className="fixed bottom-0 left-0 w-full z-50 bg-white">
       {/* Grid layout adapts: 3 cols on mobile, 8 cols on md+ */}
       <div className="grid grid-cols-3 md:grid-cols-8 gap-5 px-4 py-2">
         
