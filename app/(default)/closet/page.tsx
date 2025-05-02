@@ -1,9 +1,11 @@
 "use client";
 
-import ItemCard from "../../components/ItemCard";
-import Layout from "../../components/layout";
-import { fetchPieces, Piece } from "../../server_functions/pieces";
+import { Button } from "@/app/components/ui/button";
+import ItemCard from "../components/ItemCard";
+import Layout from "../components/layout";
+import { fetchPieces, Piece } from "../server_functions/pieces";
 import { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
 
 
 
@@ -17,6 +19,10 @@ export default function Closet() {
     };
     fetchData();
   }, []);
+
+  const handleNew = () => {
+    window.location.href = "/closet/new";
+  };
 
   const groupedItems = items.reduce((acc, item) => {
     if (!acc[item.category ?? "other"]) acc[item.category ?? "other"] = [];
@@ -38,8 +44,17 @@ export default function Closet() {
               />
             ))}
           </div>
+
+          
         </section>
+      
       ))}
+
+      <div className="fixed bottom-20 left-0 right-0 flex justify-center ">
+        <Button variant="default" className="py-10 px-10 text-lg rounded-lg hover:scale-105 transition-transform" onClick={handleNew}>
+          <Plus className="h-10 w-10" />
+        </Button>
+      </div>
     </main>
   );
 }

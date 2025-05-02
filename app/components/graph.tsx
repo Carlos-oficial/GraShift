@@ -57,10 +57,10 @@ const renderNode = (node: ClothingNode, ctx: CanvasRenderingContext2D, globalSca
       img = new Image();
       img.src = node.image;
       imageCache[node.image] = img;
-      img.onload = () => {
+      //img.onload = () => {
         // Trigger re-render once image is loaded
-        fgRef.current?.refreshCanvas();
-      };
+        //fgRef.current?.refreshCanvas();
+      //};
     }
 
     // Only draw if loaded
