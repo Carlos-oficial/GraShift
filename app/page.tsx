@@ -34,17 +34,11 @@ export default function Home() {
 
   return (
     <div>
-      <button>
-        <div>
-
-          <HomeOutlinedIcon />
-        </div>
-      </button>
       {fits.length == 0 && <div>
         <p>
           No fits yet ...
         </p>
-        <a href='/fits/new'> Add your first outfit here!</a >
+        
       </div> ||
         <div>
           <h1>All Fits</h1>
@@ -63,7 +57,11 @@ export default function Home() {
       }
 
       <GraphView/>
-
+      <a 
+          className='bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition duration-300' 
+          href='/fits/new'>
+          New outfit
+        </a>
     </div>
   );
 }
