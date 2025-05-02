@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/app/components/ui/button";
-import ItemCard from "../components/ItemCard";
-import Layout from "../components/layout";
-import { fetchPieces, Piece } from "../server_functions/pieces";
+import ItemCard from "@/app/components/ItemCard";
+import Layout from "@/app/components/layout";
+import { fetchPieces, Piece } from "@/app/server_functions/pieces";
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 
