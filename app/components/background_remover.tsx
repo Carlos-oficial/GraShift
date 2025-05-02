@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import SelfieSegmentation  from '@mediapipe/selfie_segmentation';
 // import { drawImageToCanvas } from '@mediapipe/drawing_utils';
 
-export default function BackgroundRemover() {
+export default function BackgroundRemover(image:string) {
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [imageURL, setImageURL] = useState<string | null>(null);

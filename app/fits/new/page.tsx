@@ -1,13 +1,78 @@
 "use client";
 
-import { useState } from "react";
-import { create } from "./addfit";
+import { useEffect, useState } from "react";
+import { create } from "./add_fit_check";
 import BackgroundRemover from "@/app/components/background_remover";
 
-const NewFit = () => {
+const visualcrossing_apikey = process.env.VSIUALCROSSING_API_KEY ?? "H53XFDC27T25HNKSVS6JQJ6S2";
+
+const NewFitCheck = () => {
     const [image, setImage] = useState<File | null>(null);
     const [outfitName, setOutfitName] = useState("");
+    const [description, setDescription] = useState("");
+    const [date, setDate] = useState<Date>(new Date());
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isFetchingWeatherData, setIsFetchingWeatherData] = useState(false);
+
+    const [weatherData, setWeatherData] = useState<any>(null);
+    const [location, setLocation] = useState<{ lat: number; lon: number } | null>(null);
+
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        console.log("Fetching location...");
+
+        if (!navigator.geolocation) {
+            setError('Geolocation is not supported by your browser');
+            console.error('Geolocation is not supported by your browser');
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const newLocation = {
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude,
+                };
+                setLocation(newLocation);
+
+                console.log("Location:", newLocation);
+
+                // fetch(
+                //     `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${newLocation.lat},${newLocation.lon}?unitGroup=metric&key=${visualcrossing_apikey}&contentType=json`
+                // )
+
+                fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${newLocation.lat},${newLocation.lon}/today?unitGroup=metric&include=days&key=${visualcrossing_apikey}&contentType=json`, {
+                    "method": "GET",
+                    "headers": {
+                    }
+                })
+                    .then((response) => {
+                        if (!response.ok) throw new Error("Failed to fetch weather data");
+                        return response.json();
+                    })
+                    .then((data) => {
+                        const partial_data = {
+                            "tempmax":data.days[0].tempmax,
+                            "tempmin":data.days[0].tempmin,
+                            "feelslikemax":data.days[0].feelslikemax,
+                            "feelslikemin":data.days[0].feelslikemin,
+                            "condition":data.days[0].condition,
+                            "description":data.days[0].description,
+                            "icon":data.days[0].icon,
+                            }
+                        setWeatherData(partial_data);
+                    }).catch(err => {
+                        console.error(err);
+                        setError(`Weather API Error: ${err}`);
+
+                    });
+            },
+            (err) => {
+                setError(`Error: ${err.message}`);
+                console.log("Error getting location:", err.message);
+            }
+        );
+    }, []);
 
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +95,7 @@ const NewFit = () => {
         try {
             setIsSubmitting(true);
 
-            await create(formData);
+            await create({ "image": image, "name": outfitName, "description": description, "date": date });
         } catch (error) {
             console.error("Error uploading outfit:", error);
             alert("Failed to add outfit.");
@@ -41,7 +106,9 @@ const NewFit = () => {
 
     return (
         <div className="container">
+            <a href="../"> Repeating a fit? </a>
             <h1>Add a New Outfit</h1>
+            {isFetchingWeatherData && <p>Fetching weather data...</p> || weatherData && <p>{JSON.stringify(weatherData)}</p> || <p>"not fetched yet"</p>}
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="outfitName">Outfit Name:</label>
@@ -50,6 +117,41 @@ const NewFit = () => {
                         id="outfitName"
                         value={outfitName}
                         onChange={(e) => setOutfitName(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="description">Description:</label>
+                    <input
+                        type="text"
+                        id="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="occasion">Occasion:</label>
+                    <select
+                        id="occasion"
+                        required
+                        onChange={(e) => console.log(`Selected occasion: ${e.target.value}`)}
+                    >
+                        <option value="">Select an occasion</option>
+                        <option value="work">Work</option>
+                        <option value="just_staying_home">Just Staying Home</option>
+                        <option value="night_out">Night Out</option>
+                        <option value="formal_event">Formal Event</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label htmlFor="date">Date:</label>
+                    <input
+                        type="date"
+                        id="date"
+                        value={date?.toISOString().split("T")[0]}
+                        onChange={(e) => setDate(new Date(e.target.value))}
                         required
                     />
                 </div>
@@ -63,12 +165,23 @@ const NewFit = () => {
                         required
                     />
                 </div>
+                {image && (
+                    <div>
+                        <p>Preview:</p>
+                        <img
+                            src={URL.createObjectURL(image)}
+                            alt="Selected Outfit"
+                            style={{ maxWidth: "100%", height: "auto" }}
+                        />
+                    </div>
+                )}
                 <button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? "Submitting..." : "Add Outfit"}
                 </button>
+
             </form>
         </div>
     );
 };
 
-export default NewFit;
+export default NewFitCheck;
