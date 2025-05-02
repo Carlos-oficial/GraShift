@@ -3,13 +3,16 @@
 import { useEffect, useState } from "react";
 import { create } from "./add_fit_check";
 import BackgroundRemover from "@/app/components/background_remover";
+import mobileCheck from "@/lib/mobile_check";
 
 const visualcrossing_apikey = process.env.VSIUALCROSSING_API_KEY ?? "H53XFDC27T25HNKSVS6JQJ6S2";
+
+
 
 const NewFitCheck = () => {
     const [image, setImage] = useState<File | null>(null);
     const [outfitName, setOutfitName] = useState("");
-    const [description, setDescription] = useState("");
+    const [note, setNote] = useState("");
     const [date, setDate] = useState<Date>(new Date());
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isFetchingWeatherData, setIsFetchingWeatherData] = useState(false);
@@ -52,14 +55,14 @@ const NewFitCheck = () => {
                     })
                     .then((data) => {
                         const partial_data = {
-                            "tempmax":data.days[0].tempmax,
-                            "tempmin":data.days[0].tempmin,
-                            "feelslikemax":data.days[0].feelslikemax,
-                            "feelslikemin":data.days[0].feelslikemin,
-                            "condition":data.days[0].condition,
-                            "description":data.days[0].description,
-                            "icon":data.days[0].icon,
-                            }
+                            "tempmax": data.days[0].tempmax,
+                            "tempmin": data.days[0].tempmin,
+                            "feelslikemax": data.days[0].feelslikemax,
+                            "feelslikemin": data.days[0].feelslikemin,
+                            "condition": data.days[0].condition,
+                            "note": data.days[0].note,
+                            "icon": data.days[0].icon,
+                        }
                         setWeatherData(partial_data);
                     }).catch(err => {
                         console.error(err);
@@ -95,7 +98,7 @@ const NewFitCheck = () => {
         try {
             setIsSubmitting(true);
 
-            await create({ "image": image, "name": outfitName, "description": description, "date": date });
+            await create({ "image": image, "name": outfitName, "note": note, "date": date });
         } catch (error) {
             console.error("Error uploading outfit:", error);
             alert("Failed to add outfit.");
@@ -121,12 +124,12 @@ const NewFitCheck = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="description">Description:</label>
+                    <label htmlFor="note">Note:</label>
                     <input
                         type="text"
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        id="note"
+                        value={note}
+                        onChange={(e) => setNote(e.target.value)}
                         required
                     />
                 </div>
@@ -157,13 +160,21 @@ const NewFitCheck = () => {
                 </div>
                 <div>
                     <label htmlFor="image">Upload Picture:</label>
-                    <input
-                        type="file"
-                        id="image"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        required
-                    />
+
+                    <input type="file" id="image" accept="image/*" capture="user" onChange={handleImageChange} required />
+                    <div>
+                        {mobileCheck() && (
+                            <button
+                                type="button"
+                                onClick={() => document.getElementById("image")?.click()}
+                                style={{ marginBottom: "10px" }}
+                            >
+                                Choose from Gallery
+                            </button>
+                        )}
+                        {image && <img src={URL.createObjectURL(image)} alt="Captured" style={{ marginTop: "10px", maxWidth: "100%" }} />}
+                    </div>
+
                 </div>
                 {image && (
                     <div>

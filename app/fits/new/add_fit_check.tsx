@@ -6,7 +6,7 @@ const path = require('path');
 
 interface FitCheckData {
     name: string;
-    description: string;
+    note: string;
     image: File;
     
     [key: string]: any; // To allow additional properties if needed

@@ -48,7 +48,7 @@ export default function Home() {
               <a href={`/fit/${fit._id}`} key={fit._id}>
                 <li>
                   <h2>{fit.name}</h2>
-                  <p>{fit.description}</p>
+                  <p>{fit.note}</p>
                 </li>
               </a>
             ))}

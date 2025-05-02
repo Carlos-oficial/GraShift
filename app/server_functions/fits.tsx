@@ -6,7 +6,7 @@ import mongoClient from '@/lib/mongodb';
 export interface Fit {
     _id: string;
     name: string;
-    description: string;
+    note: string;
 }
 
 export async function fetchFits() {

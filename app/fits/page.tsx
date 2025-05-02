@@ -36,7 +36,7 @@ const FitsPage = () => {
 
                         <li>
                             <h2>{fit.name}</h2>
-                            <p>{fit.description}</p>
+                            <p>{fit.note}</p>
                         </li>
                     </a>
 

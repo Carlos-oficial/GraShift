@@ -1,10 +1,12 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 interface Fit {
     id: string;
     name: string;
-    description: string;
+    note: string;
     pieces: string[]; // Add pieces field
     image: string; // Add image field
 }
@@ -44,7 +46,7 @@ export default function FitPage() {
     return (
         <div>
             <h1>{fit.name}</h1>
-            <p>{fit.description}</p>
+            <p>{fit.note}</p>
             {fit.image && <img src={fit.image} alt={fit.name} />}
             <h2>Pieces</h2>
             {fit.pieces.length > 0 ? (
