@@ -4,7 +4,7 @@ import clientPromise from '@/lib/mongodb'; // Adjust the path based on your proj
 const fs = require('fs');
 const path = require('path');
 
-interface weatherData {
+export interface weatherData {
     tempmax: number;
     tempmin: number;
     feelslikemax: number;
@@ -15,7 +15,7 @@ interface weatherData {
     [key: string]: any; // To allow additional properties if needed
 }
 
-interface FitCheckData {
+export interface FitCheckData {
     note: string | null | undefined;
     image: File;
     ocasion: string | null | undefined;
