@@ -7,6 +7,7 @@ import mobileCheck from "@/lib/mobile_check";
 import FitCheckAnnotator from "@/app/components/ImageAnnotator";
 import CircularProgress from "@mui/material/CircularProgress";
 import { weatherIcons } from "@/lib/weather_icons";
+import FitCheckAnnotator2 from "@/app/components/ImageAnnotator2";
 
 // Define the type for weatherIcons keys
 type WeatherIconKey = keyof typeof weatherIcons;
@@ -116,128 +117,132 @@ const NewFitCheck = () => {
     };
 
     return (
-        <div className="container">
-            <a href="../"> Repeating a fit? </a>
-            <h1> Add a New Outfit </h1>
-            {isFetchingWeatherData ? (
-                <p>
-                    <span>Fetching weather data...</span>
-                    <span style={{ marginLeft: "10px" }}>
-                        <CircularProgress size={20} />
-                    </span>
-                </p>
-            ) : weatherData ? (
-                <div>
-                    <img src={weatherIcons[weatherData.icon as WeatherIconKey] || ""} alt="Weather Icon" style={{ width: "50px", height: "50px" }} />
-                    <p>Weather: {weatherData.condition}</p>
-                    <p>{weatherData.icon}</p>
-                    <p>Temperature: {weatherData.tempmax}°C / {weatherData.tempmin}°C</p>
-                    <p>Feels Like: {weatherData.feelslikemax}°C / {weatherData.feelslikemin}°C</p>
-                </div>
-            ) : (
-                <p>"Weather data not fetched yet"</p>
-            )}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="note">Note:</label>
-                    <textarea
-                        id="note"
-                        value={note}
-                        onChange={(e) => setNote(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="occasion">Occasion:</label>
-                    <select
-                        id="occasion"
-                        required
-                        onChange={(e) => setOcasion(e.target.value)}
-                    >
-                        <option value="">Select an occasion</option>
-                        <option value="work">Work</option>
-                        <option value="just_staying_home">Just Staying Home</option>
-                        <option value="night_out">Night Out</option>
-                        <option value="formal_event">Formal Event</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="date">Date:</label>
-                    <input
-                        type="date"
-                        id="date"
-                        value={date?.toISOString().split("T")[0]}
-                        onChange={(e) => setDate(new Date(e.target.value))}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="image">Upload Picture:</label>
+        <div className="container grid grid-cols-2 gap-4">
 
-                    <input type="file" id="image" accept="image/*" capture="user" onChange={handleImageChange} required />
+            <div>
+                <a href="../">Repeating a fit?</a>
+                <h1>Add a New Outfit</h1>
+                {isFetchingWeatherData ? (
+                    <p>
+                        <span>Fetching weather data...</span>
+                        <span style={{ marginLeft: "10px" }}>
+                            <CircularProgress size={20} />
+                        </span>
+                    </p>
+                ) : weatherData ? (
                     <div>
-                        {mobileCheck() && (
-                            <button
-                                type="button"
-                                onClick={() => document.getElementById("image")?.click()}
-                                style={{ marginBottom: "10px" }}
-                            >
-                                Choose from Gallery
-                            </button>
-                        )}
-                        {image &&
-                            <FitCheckAnnotator imgSrc={URL.createObjectURL(image)} dots={dots} setDots={setDots} editingDot={editingDot} setEditingDot={setEditingDot}/>
-                            // <img src={URL.createObjectURL(image)} alt="Captured" style={{ marginTop: "10px", maxWidth: "100%" }} />
-                        }
+                        <img src={weatherIcons[weatherData.icon as WeatherIconKey] || ""} alt="Weather Icon" style={{ width: "50px", height: "50px" }} />
+                        <p>Weather: {weatherData.condition}</p>
+                        <p>{weatherData.icon}</p>
+                        <p>Temperature: {weatherData.tempmax}°C / {weatherData.tempmin}°C</p>
+                        <p>Feels Like: {weatherData.feelslikemax}°C / {weatherData.feelslikemin}°C</p>
                     </div>
-                    <ul >
-                        {dots.map((dot, index) => (
-                            <li key={index}>
-                                <div className="mt-2">
-                                    <label htmlFor={`piece-name-${index}`}>Piece Name:</label>
-                                    <input
-                                        type="text"
-                                        id={`piece-name-${index}`}
-                                        value={dot.piece_data?.name || ""}
-                                        onChange={(e) => {
-                                            const updatedDots = [...dots];
-                                            updatedDots[index].piece_data = {
-                                                ...updatedDots[index].piece_data,
-                                                name: e.target.value,
-                                            };
-                                            setDots(updatedDots);
-                                        }}
-                                        className="ml-2 border rounded px-2 py-1"
-                                    />
+                ) : (
+                    <p>"Weather data not fetched yet"</p>
+                )}
+                                <ul>
+                    {dots.map((dot, index) => (
+                    <li key={index}>
+                        <div className="mt-2">
+                        <label htmlFor={`piece-name-${index}`}>Piece Name:</label>
+                        <input
+                            type="text"
+                            id={`piece-name-${index}`}
+                            value={dot.piece_data?.name || ""}
+                            onChange={(e) => {
+                            const updatedDots = [...dots];
+                            updatedDots[index].piece_data = {
+                                ...updatedDots[index].piece_data,
+                                name: e.target.value,
+                            };
+                            setDots(updatedDots);
+                            }}
+                            className="ml-2 border rounded px-2 py-1"
+                        />
+                        </div>
+                        <div className="mt-2">
+                        <label htmlFor={`piece-type-${index}`}>Piece Type:</label>
+                        <input
+                            type="text"
+                            id={`piece-type-${index}`}
+                            value={dot.piece_data?.type || ""}
+                            onChange={(e) => {
+                            const updatedDots = [...dots];
+                            updatedDots[index].piece_data = {
+                                ...updatedDots[index].piece_data,
+                                type: e.target.value,
+                            };
+                            setDots(updatedDots);
+                            }}
+                            className="ml-2 border rounded px-2 py-1"
+                        />
+                        </div>
+                    </li>
+                    ))}
+                </ul>
+            </div>
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="note">Note:</label>
+                        <textarea
+                            id="note"
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="occasion">Occasion:</label>
+                        <select
+                            id="occasion"
+                            required
+                            onChange={(e) => setOcasion(e.target.value)}
+                        >
+                            <option value="">Select an occasion</option>
+                            <option value="work">Work</option>
+                            <option value="just_staying_home">Just Staying Home</option>
+                            <option value="night_out">Night Out</option>
+                            <option value="formal_event">Formal Event</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label htmlFor="date">Date:</label>
+                        <input
+                            type="date"
+                            id="date"
+                            value={date?.toISOString().split("T")[0]}
+                            onChange={(e) => setDate(new Date(e.target.value))}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="image">Upload Picture:</label>
+                        <input type="file" id="image" accept="image/*" capture="user" onChange={handleImageChange} required />
+                        <div>
+                            {mobileCheck() && (
+                                <button
+                                    type="button"
+                                    onClick={() => document.getElementById("image")?.click()}
+                                    style={{ marginBottom: "10px" }}
+                                >
+                                    Choose from Gallery
+                                </button>
+                            )}
+                            {image && (
+                                <div className="w-[50%] h-10">
+                                    <FitCheckAnnotator2 imgSrc={URL.createObjectURL(image)} dots={dots} setDots={setDots} editingDot={editingDot} setEditingDot={setEditingDot} />
                                 </div>
-                                <div className="mt-2">
-                                    <label htmlFor={`piece-type-${index}`}>Piece Type:</label>
-                                    <input
-                                        type="text"
-                                        id={`piece-type-${index}`}
-                                        value={dot.piece_data?.type || ""}
-                                        onChange={(e) => {
-                                            const updatedDots = [...dots];
-                                            updatedDots[index].piece_data = {
-                                                ...updatedDots[index].piece_data,
-                                                type: e.target.value,
-                                            };
-                                            setDots(updatedDots);
-                                        }}
-                                        className="ml-2 border rounded px-2 py-1"
-                                    />
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-
-                </div>
-                <button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Submitting..." : "Add Outfit"}
-                </button>
-
-            </form>
+                            )}
+                        </div>
+                    </div>
+                    <button type="submit" disabled={isSubmitting} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200">
+                        SEND
+                        {isSubmitting ? "Submitting..." : "Add Outfit"}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

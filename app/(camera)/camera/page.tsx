@@ -7,6 +7,7 @@ import Link from "next/link";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { Button } from "@/app/components/ui/button";
 
+import { Camera as CameraIcon, X, ArrowLeft, Upload, Check, Palette } from "lucide-react"
 export default function Camera() {
   const [image, setImage] = useState<string | null>(null);
   const [editingDot, setEditingDot] = useState<{ index: number; dot: { x: number; y: number } } | null>(null);
@@ -46,12 +47,12 @@ export default function Camera() {
   return (<>
     <nav className="sticky top-0 left-0 w-full z-50 bg-gradient-to-b from-black/30 to-transparent text-white">
       <div className="grid grid-cols-3 md:grid-cols-8 gap-5 p-4">
-      <div className="hidden md:block md:col-span-2" />
+        <div className="hidden md:block md:col-span-2" />
 
-      <div className="col-span-3 md:col-span-4 flex justify-between items-center">
-        <Link href="/" className="flex flex-col items-center  hover:opacity-80">
-        <CloseOutlinedIcon />
-        </Link>
+        <div className="col-span-3 md:col-span-4 flex justify-between items-center">
+          <Link href="/" className="flex flex-col items-center  hover:opacity-80">
+            <CloseOutlinedIcon />
+          </Link>
 
         {image && (
         <label htmlFor="fileInput" className="font-weight-xl cursor-pointer px-4 py-2 rounded hover:opacity-80">
@@ -60,11 +61,11 @@ export default function Camera() {
         )}
       </div>
 
-      {/* Desktop: right empty cols 7–8 */}
-      <div className="hidden md:block md:col-span-2" />
+        {/* Desktop: right empty cols 7–8 */}
+        <div className="hidden md:block md:col-span-2" />
       </div>
     </nav>
-    <div className="flex flex-col items-center justify-center h-full">
+    <div className="flex flex-col items-center justify-center h-full my-auto cursor-pointer">
       <input
         type="file"
         accept="image/*"
@@ -73,12 +74,17 @@ export default function Camera() {
         style={{ display: "none" }}
         id="fileInput"
       />
-      <div className="flex items-center justify-center">
 
-        {!image && <label htmlFor="fileInput" className="cursor-pointer bg-black text-white px-4 py-2 rounded">
-          Choose Image
-        </label>
-        }
+      <CameraIcon size={48} className="text-gray-400 mb-2" />
+      <p className="text-sm text-gray-500">Tap to take a photo</p>
+      <p className="text-xs text-gray-400 mt-1"></p>
+      <label htmlFor="fileInput" className="text-gray-400 mt-1">
+        or upload from your gallery
+      </label>
+
+
+      <div className="flex flex items-center justify-center">
+
       </div>
       {image &&
         <div>
