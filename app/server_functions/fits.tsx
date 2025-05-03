@@ -9,6 +9,8 @@ export interface Fit {
     _id: string;
     name: string;
     note: string;
+    fit_checks: string[];
+
 }
 
 export async function fetchFits() {
@@ -21,7 +23,19 @@ export async function fetchFits() {
         const formattedFits = fits.map(fit => ({
             ...fit,
             _id: fit._id.toString(), // Convert ObjectId to string
-        } as Fit));
+        } as Fit & { imageUrl: string }));
+
+        for (const fit of formattedFits) {
+            if (fit.fit_checks.length > 0) {
+                const fitChecksCollection = database.collection('fit_checks'); // Replace 'fit_checks' with your fit checks collection name
+                const firstFitCheck = await fitChecksCollection.findOne({ _id: new ObjectId(fit.fit_checks[0]) });
+                if (firstFitCheck) {
+                    fit.imageUrl = firstFitCheck.imagePath; // Assuming the fit check document has an 'image' field
+                }
+            }
+        }
+
+
         return formattedFits;
     } catch (error) {
         console.error('Failed to fetch fits from MongoDB:', error);
