@@ -14,7 +14,7 @@ export default function MobileNavBar() {
       {/* Nav buttons (3 cols on mobile, 4 cols centered on desktop) */}
       <div className="col-span-3 md:col-span-4 flex justify-around items-center">
         <Link href="/" className="flex flex-col items-center text-black hover:text-gray-500">
-        <AllOutOutlined fontSize="medium" />
+        <img src="/grafit.svg" alt="Logo" className="h-8 w-8" />
         <span className="text-xs">Grafit</span>
         </Link>
         <Link href="/closet" className="flex flex-col items-center text-black hover:text-gray-500">

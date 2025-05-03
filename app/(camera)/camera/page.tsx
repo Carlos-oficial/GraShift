@@ -55,7 +55,7 @@ export default function Camera() {
           </Link>
 
         {image && (
-        <label htmlFor="fileInput" className="font-weight-xl cursor-pointer px-4 py-2 rounded hover:opacity-80">
+        <label htmlFor="fileInput" className=" cursor-pointer px-4 py-2 rounded hover:opacity-80">
           Swap photo
         </label>
         )}
@@ -83,7 +83,7 @@ export default function Camera() {
       </label>
 
 
-      <div className="flex flex items-center justify-center">
+      <div className="flex items-center justify-center">
 
       </div>
       {image &&
