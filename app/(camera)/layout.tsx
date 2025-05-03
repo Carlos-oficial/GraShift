@@ -3,7 +3,7 @@ import { Outfit } from "next/font/google";
 import "../globals.css";
 
 const outfitFont = Outfit({
-  variable: "--font-geist-sans",
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 

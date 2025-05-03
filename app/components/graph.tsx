@@ -5,89 +5,107 @@ import ForceGraph2D, { ForceGraphMethods } from 'react-force-graph-2d';
 
 // Define custom node types
 export interface ClothingNode {
-  id: string;
-  type: 'clothing' | 'outfit';
-  name: string;
-  image?: string;
-  x?: number;
-  y?: number;
-  fx?: number;
-  fy?: number;
+  id: string; // Unique identifier for the node
+  type: 'clothing' | 'outfit'; // Type of the node
+  name: string; // Name of the clothing or outfit
+  image?: string; // Optional image URL for the node
+  x?: number; // X-coordinate of the node
+  y?: number; // Y-coordinate of the node
+  fx?: number; // Fixed X-coordinate
+  fy?: number; // Fixed Y-coordinate
 }
 
 export interface ClothingLink {
-  source: string | ClothingNode;
-  target: string | ClothingNode;
+  source: string | ClothingNode; // Source node or ID
+  target: string | ClothingNode; // Target node or ID
 }
 
 export interface GraphData {
-  nodes: ClothingNode[];
-  links: ClothingLink[];
+  nodes: ClothingNode[]; // Array of nodes
+  links: ClothingLink[]; // Array of links connecting nodes
 }
 
 export interface ClothingGraphProps {
-  data: GraphData;
-  onClothingClick?: (id: string) => void;
+  data: GraphData; // Graph data containing nodes and links
+  onClothingClick?: (id: string) => void; // Callback for when a clothing node is clicked
 }
 
 const ClothingGraph: React.FC<ClothingGraphProps> = ({ data, onClothingClick }) => {
-  const fgRef = useRef<ForceGraphMethods>(null);
+  // Reference to the ForceGraph2D instance
+  const fgRef = useRef<ForceGraphMethods<ClothingNode, ClothingLink> | undefined>(undefined) as React.MutableRefObject<ForceGraphMethods<ClothingNode, ClothingLink> | undefined>;
+
+  // State to track the currently hovered node
   const [hoverNode, setHoverNode] = useState<ClothingNode | null>(null);
+
+  // State to track the mouse position for hover effects
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
+  // State to track the currently selected node
   const [selectedNode, setSelectedNode] = useState<ClothingNode | null>(null);
+
+  // State to track the position of the selected node
   const [selectedPos, setSelectedPos] = useState({ x: 0, y: 0 });
 
-  // Track mouse position manually
+  // Track mouse position manually for hover effects
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     setHoverPos({ x: e.pageX, y: e.pageY });
   };
 
-  
-
+  // Cache for storing loaded images
   const imageCache: { [url: string]: HTMLImageElement } = {};
 
-const renderNode = (node: ClothingNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
-  const size = 12;
+  // Function to render a node on the canvas
+  const renderNode = (node: ClothingNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
+    const size = 12; // Node size
 
-  if (node.image) {
-    let img = imageCache[node.image];
+    
 
-    if (!img) {
-      img = new Image();
-      img.src = node.image;
-      imageCache[node.image] = img;
-      //img.onload = () => {
-        // Trigger re-render once image is loaded
-        //fgRef.current?.refreshCanvas();
-      //};
+    if (node.image) {
+      let img = imageCache[node.image];
+
+      // Load the image if not already cached
+      if (!img) {
+        
+        img = new Image();
+        img.src = node.image;
+        imageCache[node.image] = img;
+      }
+
+      if (img.complete && img.naturalWidth !== 0) {
+        ctx.save(); // Save the current state
+      
+        // Create a circular clipping path
+        ctx.beginPath();
+        ctx.arc(node.x!, node.y!, size / 3, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.clip(); // Apply the clipping region
+      
+        // Draw the image inside the clipped circle
+        ctx.drawImage(img, node.x! - size / 2, node.y! - size / 2, size, size);
+      
+        ctx.restore(); // Restore the previous state (remove clipping)
+      }
+    } else {
+      // Draw a fallback dot if no image is available
+      ctx.beginPath();
+      ctx.arc(node.x!, node.y!, size / 2, 0, 2 * Math.PI, false);
+      ctx.fillStyle = '#333';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1;
+      ctx.stroke();
     }
 
-    // Only draw if loaded
-    if (img.complete && img.naturalWidth !== 0) {
-      ctx.drawImage(img, node.x! - size / 2, node.y! - size / 2, size, size);
+    // Render the node name if it is of type 'clothing'
+    if (node.type === 'clothing') {
+      ctx.font = `${12 / globalScale}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#111';
+      ctx.fillText(node.name, node.x!, node.y! + size / 2 + 6 / globalScale);
     }
-  } else {
-    // Draw a fallback dot
-    ctx.beginPath();
-    ctx.arc(node.x!, node.y!, size / 2, 0, 2 * Math.PI, false);
-    ctx.fillStyle = '#333';
-    ctx.fill();
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  }
+  };
 
-  if (node.type === 'clothing') {
-    ctx.font = `${6 / globalScale}px Arial`;
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#111';
-    ctx.fillText(node.name, node.x!, node.y! + size / 2 + 6 / globalScale);
-  }
-};
-
-  
-
+  // Handle hover events on nodes
   const handleNodeHover = (node: ClothingNode | null) => {
     if (node?.type === 'clothing') {
       setHoverNode(node);
@@ -96,18 +114,29 @@ const renderNode = (node: ClothingNode, ctx: CanvasRenderingContext2D, globalSca
     }
   };
 
+  // Handle click events on nodes
   const handleNodeClick = (node: ClothingNode) => {
     if (node?.type === 'clothing') {
-      onClothingClick?.(node.id);
+      onClothingClick?.(node.id); // Trigger the callback with the node ID
+      //setSelectedNode(node); // Set the selected node
+      //setSelectedPos(hoverPos); // Set the position for the tooltip
+      window.location.href = `/closet/${node.id}`; // Redirect to the outfit page
+    }
+    if (node?.type === 'outfit') {
+      setSelectedNode(node); // Set the selected node
+      setSelectedPos(hoverPos); // Set the position for the tooltip
+      //window.location.href = `/fit/${node.id}`; // Redirect to the outfit page
+      window.location.href = `/diary/fitcheck`; // example
+      
     }
   };
 
   return (
     <div
-      onMouseMove={handleMouseMove}
-      className='absolute fixed w-screen left-0'
+      onMouseMove={handleMouseMove} // Track mouse movement
+      className='absolute w-screen left-0' // Styling for the container
     >
-
+      {/* Render a tooltip for the selected node */}
       {selectedNode && (
         <div
           style={{
@@ -129,20 +158,24 @@ const renderNode = (node: ClothingNode, ctx: CanvasRenderingContext2D, globalSca
         </div>
       )}
 
+      {/* Render the ForceGraph2D component */}
       <ForceGraph2D
-        ref={fgRef}
-        
-        graphData={data}
-        backgroundColor="#fff"
-        nodeId="id"
-        nodeCanvasObject={(node, ctx, globalScale) => renderNode(node, ctx, globalScale)}
-        onNodeHover={handleNodeHover}
-        onNodeClick={handleNodeClick}
-        linkColor={() => '#111'}
-        linkWidth={1}
-        cooldownTicks={50}
-        onEngineStop={() => fgRef.current?.zoomToFit(800,400)}
-        on
+        ref={fgRef} // Reference to the graph instance
+        graphData={data} // Graph data
+        backgroundColor="#fff" // Background color of the canvas
+        nodeId="id" // Node ID field
+        nodeCanvasObject={(node, ctx, globalScale) => renderNode(node, ctx, globalScale)} // Custom node rendering
+        onNodeHover={handleNodeHover} // Handle hover events
+        onNodeClick={handleNodeClick} // Handle click events
+        linkColor={() => '#111'} // Link color
+        linkWidth={1} // Link width
+        cooldownTicks={50} // Number of ticks before stopping the simulation
+        onEngineStop={() => {
+          // Automatically zoom to fit the graph when the simulation stops
+          const screenWidth = window.innerWidth;
+          const padding = screenWidth <= 768 ? 100 : 400; // Adjust padding for mobile and desktop
+          fgRef.current?.zoomToFit(800, padding);
+        }}
       />
     </div>
   );

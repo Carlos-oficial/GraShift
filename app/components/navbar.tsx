@@ -19,7 +19,7 @@ export default function Navbar({ title }: NavbarProps) {
           <Link href="/camera" className="flex flex-col items-center  text-black hover:text-gray-500">
             <CameraAltOutlinedIcon/>
           </Link>
-          <span className="text-base md:text-lg font-semibold">{title}</span>
+          <img src="/grafit.svg" alt="Logo" className="h-14 w-14" />
           <Link href="/diary" className="flex flex-col items-center  text-black hover:text-gray-500">
             <ImportContactsOutlined />
           </Link> 
