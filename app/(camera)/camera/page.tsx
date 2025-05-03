@@ -38,12 +38,12 @@ export default function Camera() {
             <CloseOutlinedIcon />
           </Link>
 
-          {image && (
-            <label htmlFor="fileInput" className="cursor-pointer px-4 py-2 rounded hover:opacity-80">
-              Swap photo
-            </label>
-          )}
-        </div>
+        {image && (
+        <label htmlFor="fileInput" className="font-weight-xl cursor-pointer px-4 py-2 rounded hover:opacity-80">
+          Swap photo
+        </label>
+        )}
+      </div>
 
         {/* Desktop: right empty cols 7–8 */}
         <div className="hidden md:block md:col-span-2" />
