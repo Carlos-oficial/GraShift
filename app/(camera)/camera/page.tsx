@@ -5,6 +5,7 @@ import FitCheckAnnotator from "../../components/ImageAnnotator";
 
 import Link from "next/link";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { Button } from "@/app/components/ui/button";
 
 export default function Camera() {
   const [image, setImage] = useState<string | null>(null);
@@ -25,7 +26,22 @@ export default function Camera() {
     }
   };
 
-  const [dots, setDots] = useState<{ x: number; y: number; piece_data: any }[]>([]);
+
+
+  type PieceData = {
+    category?: string|undefined;
+    id?: string|undefined;
+  };
+
+  const handleDotUpdate = (index: number, updatedDot: { x: number; y: number; piece_data?: PieceData }) => {
+    setDots((prevDots) => {
+      const newDots = [...prevDots];
+      newDots[index] = { ...newDots[index], ...updatedDot };
+      return newDots;
+    });
+  };
+
+  const [dots, setDots] = useState<{ x: number; y: number; piece_data: PieceData }[]>([]);
 
   return (<>
     <nav className="sticky top-0 left-0 w-full z-50 bg-gradient-to-b from-black/30 to-transparent text-white">
@@ -69,7 +85,6 @@ export default function Camera() {
           <FitCheckAnnotator imgSrc={image} dots={dots} setDots={setDots} editingDot={editingDot} setEditingDot={setEditingDot} />
         </div>
       }
-      <button>Upload</button>
     </div>
   </>
   );

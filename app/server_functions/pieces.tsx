@@ -33,3 +33,33 @@ export async function fetchPieces(): Promise<Piece[]> {
         await client.close();
     }
 }
+
+//server function that creates a new piece with id
+async function createPiece(piece: Omit<Piece, '_id'>): Promise<Piece> {
+    const client = await mongoClient.connect();
+    try {
+        const database = client.db('Alfaiate'); // Replace 'alfaiate' with your database name
+        const collection = database.collection('pieces'); // Replace 'pieces' with your collection name
+
+        const result = await collection.insertOne(piece);
+        if (!result.acknowledged) {
+            throw new Error('Failed to create a new piece');
+        }
+
+        return {
+            _id: result.insertedId.toString(), // Convert ObjectId to string
+            name: piece.name || null,
+            category: piece.category || null,
+            color: piece.color || null,
+            description: piece.description || null,
+            imageUrl: piece.imageUrl,
+            material: piece.material || null,
+            ...piece, // Include any additional properties
+        };
+    } catch (error) {
+        console.error('Failed to create a new piece in MongoDB:', error);
+        throw error;
+    } finally {
+        await client.close();
+    }
+}
