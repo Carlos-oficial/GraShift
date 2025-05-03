@@ -2,6 +2,10 @@
 
 import { useRef, useState } from 'react';
 import MultiStepForm from './MultistepForm';
+import { CardContent } from '@mui/material';
+import { Card } from './ui/card';
+import { X } from 'lucide-react';
+import AnotationEditCard from './AnotationEditCard';
 
 interface ImageAnnotatorProps {
     imgSrc: string;
@@ -24,6 +28,20 @@ export default function FitCheckAnnotator({
 
 }) {
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const updateDotData = (index: number, data: any) => {
+        setDots((prevDots) =>
+            prevDots.map((dot, i) => (i === index ? { ...dot, piece_data: data } : dot))
+        );
+    };
+
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+
+    const handleFormCompletion = (category: string, itemId: string) => {
+        setSelectedCategory(category);
+        setSelectedItemId(itemId);
+    };
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = containerRef.current!.getBoundingClientRect();
@@ -60,19 +78,57 @@ export default function FitCheckAnnotator({
             {dots.map((dot, i) => (
                 <div key={i}>
                     {
-                        editingDot?.index === i && (
+                        editingDot?.index === i && (dot?.piece_data.category == undefined && (
                             <div
                               className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
-                              onClick={() => setEditingDot(null)} // Click outside closes the form
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setEditingDot(null)}} // Click outside closes the form
                             >
                               <div
                                 className="relative rounded-xl max-w-4xl w-full p-8 z-60"
                                 onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
                               >
-                                <MultiStepForm onComplete={() => console.log('Form completed')} onClose={() => setEditingDot(null)} />
+                                <MultiStepForm
+                                    initialStep={1}
+                                    initialData={dot.piece_data}
+                                    onComplete={({ category, itemId }) => {
+                                        updateDotData(i, { category, id: itemId });
+                                        setEditingDot(null);
+                                    }}
+                                    onClose={() => setEditingDot(null)}
+                                />
                               </div>
                             </div>
-                          )
+                          ) || (
+                            <div
+                              className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setEditingDot(null)}} // Click outside closes the form
+                            >
+                              <div
+                                className="relative rounded-xl max-w-4xl w-full p-8 z-60"
+                                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                              >
+                                <AnotationEditCard
+                                  onClose={() => setEditingDot(null)}
+                                  onEdit={() => {
+                                      <MultiStepForm
+                                        initialStep={2}
+                                        initialData={dot.piece_data}
+                                        onComplete={({ category, itemId }) => {
+                                          updateDotData(i, { category, id: itemId });
+                                          setEditingDot(null);
+                                        }}
+                                        onClose={() => setEditingDot(null)}
+                                      />;
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            
+                          ))
                     }
                     <div
                         className={`absolute w-5 h-5 rounded-full cursor-pointer ${editingDot?.index === i
@@ -104,7 +160,7 @@ export default function FitCheckAnnotator({
                             }
 
                             setDots((prevDots) =>
-                                prevDots.map((d, idx) => (idx === i ? { x, y, piece_data: {} } : d))
+                                prevDots.map((d, idx) => (idx === i ? { x, y, piece_data: d.piece_data } : d))
                             );
 
                             const handleMouseMove = (moveEvent: MouseEvent) => {

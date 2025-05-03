@@ -10,10 +10,12 @@ type Category = "Top" | "Bottom" | "Accessories" | "Shoes"
 interface MultistepCardProps {
   onClose: () => void
   onComplete: (selection: { category: Category; itemId: string }) => void
+  initialStep: number
+  initialData: any
 }
 
-export default function MultistepCard({ onClose, onComplete }: MultistepCardProps) {
-  const [step, setStep] = useState<number>(1)
+export default function MultistepCard({ onClose, onComplete, initialStep, initialData}: MultistepCardProps) {
+  const [step, setStep] = useState<number>(initialStep)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null)
 
@@ -44,7 +46,7 @@ export default function MultistepCard({ onClose, onComplete }: MultistepCardProp
   const handleConfirm = () => {
     if (selectedCategory && selectedItemId) {
       //setStep(3)
-      onComplete({ category: selectedCategory, itemId: selectedItemId })
+      
     }
   }
 
@@ -67,7 +69,7 @@ export default function MultistepCard({ onClose, onComplete }: MultistepCardProp
       <CardContent className="p-0">
         {/* Close button - available at all steps */}
         <button onClick={onClose} className="absolute right-3 top-3 z-10" aria-label="Close">
-          <X className="h-5 w-5 text-gray-500" />
+          <X className="h-8 w-8 text-gray-500" />
         </button>
 
         {/* Step 1: Category Selection */}
@@ -92,7 +94,7 @@ export default function MultistepCard({ onClose, onComplete }: MultistepCardProp
         {/* Step 2: Item Selection */}
         {step === 2 && selectedCategory && (
           <div className="p-6">
-            <h2 className="text-sm text-gray-500 mb-4">Seleciona a peça correspondente</h2>
+            <h2 className="text-sm text-gray-500 mb-4">Select the corresponding garment</h2>
             <div className="mb-2 font-medium">{selectedCategory}</div>
             <div className="grid grid-cols-3 gap-2 mb-4">
               {items
@@ -116,20 +118,22 @@ export default function MultistepCard({ onClose, onComplete }: MultistepCardProp
             </div>
             <div className="grid grid-cols-2 gap-2">
               <Button variant="outline" onClick={handleBack}>
-                Voltar
+                Go back
               </Button>
               <Button
                 variant="default"
                 className="bg-black text-white hover:bg-gray-800"
-                onClick={handleConfirm}
+                onClick={() => onComplete({ category: selectedCategory!, itemId: selectedItemId! })}
                 disabled={!selectedItemId}
               >
-                Confirmar
+                Confirm
               </Button>
             </div>
+            <Button variant="ghost" className="w-full mt-2" onClick={handleBack}>
+                New garment
+              </Button>
           </div>
         )}
-
         {/* Step 3: Confirmation 
         {step === 3 && selectedItem && (
           <div className="p-6">
