@@ -21,7 +21,7 @@ export interface IFitCheck {
     imagePath?: string;
 }
 
-const FitSchema = new Schema<IFitCheck>({
+const FitCheckSchema = new Schema<IFitCheck>({
     date: { type: Date, required: true },
     weatherData: { 
         type: Object, 
@@ -54,6 +54,6 @@ const FitSchema = new Schema<IFitCheck>({
     }
 });
 
-const Fit = models.Fit || model<IFitCheck>('FitCheck', FitSchema);
+const FitCheck = models.FitCheck || model<IFitCheck>('FitCheck', FitCheckSchema);
 
-export default Fit;
+export default FitCheck;
