@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ForceGraph2D, { ForceGraphMethods } from 'react-force-graph-2d';
 
 // Define custom node types
@@ -34,6 +34,14 @@ const ClothingGraph: React.FC<ClothingGraphProps> = ({ data, onClothingClick }) 
   // Reference to the ForceGraph2D instance
   const fgRef = useRef<ForceGraphMethods<ClothingNode, ClothingLink> | undefined>(undefined) as React.MutableRefObject<ForceGraphMethods<ClothingNode, ClothingLink> | undefined>;
 
+  useEffect(() => {
+    // forceRef.current.d3Force("collide", d3.forceCollide(13));
+    fgRef.current!.d3Force("charge")!.strength(-1);
+    fgRef.current!.d3Force("link")!.distance(30);
+    fgRef.current!.d3Force("charge")!.distanceMax(100);
+  }, []);
+
+
   // State to track the currently hovered node
   const [hoverNode, setHoverNode] = useState<ClothingNode | null>(null);
 
@@ -56,33 +64,34 @@ const ClothingGraph: React.FC<ClothingGraphProps> = ({ data, onClothingClick }) 
 
   // Function to render a node on the canvas
   const renderNode = (node: ClothingNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
-    const size = 12; // Node size
+    const size = node.type === 'clothing' ? 5 : 10; // Node size
 
-    
 
     if (node.image) {
       let img = imageCache[node.image];
 
       // Load the image if not already cached
       if (!img) {
-        
+
         img = new Image();
         img.src = node.image;
         imageCache[node.image] = img;
       }
 
       if (img.complete && img.naturalWidth !== 0) {
+        const ratio = img.naturalHeight / img.naturalWidth
         ctx.save(); // Save the current state
-      
+
         // Create a circular clipping path
-        ctx.beginPath();
-        ctx.arc(node.x!, node.y!, size / 3, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.clip(); // Apply the clipping region
-      
+        // ctx.beginPath();
+        // ctx.arc(node.x!, node.y!, size / 3, 0, 2 * Math.PI);
+        // ctx.closePath();
+        // ctx.clip(); // Apply the clipping region
+
         // Draw the image inside the clipped circle
-        ctx.drawImage(img, node.x! - size / 2, node.y! - size / 2, size, size);
-      
+
+        ctx.drawImage(img, node.x! - size / 2, node.y! - size / 2, size, size * ratio);
+
         ctx.restore(); // Restore the previous state (remove clipping)
       }
     } else {
@@ -127,7 +136,7 @@ const ClothingGraph: React.FC<ClothingGraphProps> = ({ data, onClothingClick }) 
       setSelectedPos(hoverPos); // Set the position for the tooltip
       //window.location.href = `/fit/${node.id}`; // Redirect to the outfit page
       window.location.href = `/diary/fitcheck`; // example
-      
+
     }
   };
 
@@ -167,14 +176,14 @@ const ClothingGraph: React.FC<ClothingGraphProps> = ({ data, onClothingClick }) 
         nodeCanvasObject={(node, ctx, globalScale) => renderNode(node, ctx, globalScale)} // Custom node rendering
         onNodeHover={handleNodeHover} // Handle hover events
         onNodeClick={handleNodeClick} // Handle click events
-        linkColor={() => '#111'} // Link color
+        linkColor={() => '#AAA'} // Link color
         linkWidth={1} // Link width
         cooldownTicks={50} // Number of ticks before stopping the simulation
         onEngineStop={() => {
           // Automatically zoom to fit the graph when the simulation stops
           const screenWidth = window.innerWidth;
-          const padding = screenWidth <= 768 ? 100 : 400; // Adjust padding for mobile and desktop
-          fgRef.current?.zoomToFit(800, padding);
+          const padding = screenWidth <= 768 ? -100 : 100; // Adjust padding for mobile and desktop
+          fgRef.current?.zoomToFit(500, padding);
         }}
       />
     </div>

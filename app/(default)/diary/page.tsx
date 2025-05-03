@@ -2,10 +2,12 @@ import Link from "next/link";
 import FitcheckCard from "../../components/FitcheckCard";
 
 const fitcheckData = [
-  { imageUrl: "/uploads/pants.jpg", title: "Casual", time: "12:30", date: "2023-04-01" },
-  { imageUrl: "/uploads/pants.jpg", title: "Casual", time: "14:00", date: "2023-09-06" },
-  { imageUrl: "/uploads/pants.jpg", title: "Casual", time: "10:00", date: "2023-04-02" },
-  { imageUrl: "/uploads/pants.jpg", title: "Casual", time: "16:30", date: "2024-04-02" },
+  { imageUrl: "/uploads/fit4.jpg", title: "Casual", time: "16:30", date: "2024-04-02" },
+  { imageUrl: "/uploads/fit3.jpg", title: "Casual", time: "10:00", date: "2023-04-02" },
+  { imageUrl: "/uploads/fit2.jpg", title: "Casual", time: "14:00", date: "2023-09-06" },
+  { imageUrl: "/uploads/fit1.jpg", title: "Casual", time: "12:30", date: "2023-04-01" },
+  { imageUrl: "/uploads/fit8.jpg", title: "Casual", time: "12:30", date: "2023-04-01" },
+
 ];
 
 export default function Diary() {

@@ -27,7 +27,7 @@ export default function RootLayout({
 
     <html lang="en">
       <body
-        className={`${outfitFont.variable} antialiased flex flex-col h-screen w-full overflow-hidden`}
+        className={`${outfitFont.variable} antialiased flex flex-col h-screen w-full`}
       >
 
         <Navbar title="Home" />

@@ -31,6 +31,7 @@ export default function Closet() {
   }, {} as Record<string, typeof items>);
   return (
     <main className="px-4 py-6 space-y-10">
+      {/* <p>{JSON.stringify(items)}</p> */}
       {Object.entries(groupedItems).map(([category, categoryItems]) => (
         <section key={category}>
           <h2 className="text-lg font-semibold text-gray-800 mb-4">{category}</h2>
